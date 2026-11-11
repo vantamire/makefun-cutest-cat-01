@@ -2,9 +2,13 @@
 // Writes one 768x768 PNG to $MAKEFUN_OUTPUT_DIR/entry.png (default /output).
 // No network, no randomness, no Date: two runs write byte-identical output.
 //
-// The cat: a ginger kitten sitting front-on, head tilted, big bright eyes,
-// small smile, blush cheeks, whiskers, a curled tail, and a ball of yarn.
-// Soft cream background so the cat is the clear subject at any size.
+// The cat (iteration 2): a grey tabby loaf sitting up, one paw raised
+// reaching for a butterfly, green eyes looking up in wonder, little
+// tongue out, curled tail. Soft sky-blue background so the cat is the
+// clear subject at any size.
+//
+// Iteration 2 (2026-11-11): this revision replaces the first submission's
+// ginger kitten with the grey tabby loaf reaching for a butterfly.
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -195,109 +199,124 @@ function hBezier(x1: number, y1: number, cx: number, cy: number, x2: number, y2:
   bezier(ax, ay, bx, by, cx2, cy2, w, c, alpha);
 }
 
-// ------------------------------------------------------------------- scene
-// Background: warm cream with a soft peach halo behind the cat.
+// Variant B: grey tabby loaf sitting up, one paw raised, reaching for a butterfly.
+const BG_B: RGBA = [224, 238, 250, 1];
+const HALO_B: RGBA = [205, 228, 245, 1];
+const HALO2_B: RGBA = [190, 220, 240, 1];
+const FURT: RGBA = [170, 180, 192, 1];
+const FURTD: RGBA = [130, 142, 158, 1];
+const FURTL: RGBA = [202, 210, 220, 1];
+const BFLY: RGBA = [245, 170, 80, 1];
+const IRIS_B: RGBA = [90, 140, 90, 1];
+
 for (let i = 0; i < W * H; i++) {
-  px[i * 4] = CREAM[0];
-  px[i * 4 + 1] = CREAM[1];
-  px[i * 4 + 2] = CREAM[2];
+  px[i * 4] = BG_B[0];
+  px[i * 4 + 1] = BG_B[1];
+  px[i * 4 + 2] = BG_B[2];
   px[i * 4 + 3] = 255;
 }
-circle(384, 360, 320, HALO);
-circle(384, 360, 250, HALO2);
-// Faint pastel confetti dots and two little hearts.
-circle(92, 112, 18, [255, 217, 232, 0.7]);
-circle(682, 92, 14, [216, 236, 255, 0.7]);
-circle(700, 300, 12, [255, 240, 184, 0.8]);
-circle(70, 310, 10, [216, 245, 227, 0.8]);
-heart(648, 128, 30, PINK, 0.85);
-heart(108, 168, 20, PINK, 0.7);
+circle(384, 360, 320, HALO_B);
+circle(384, 360, 250, HALO2_B);
+// Faint dots.
+circle(92, 112, 18, [255, 255, 255, 0.8]);
+circle(682, 92, 14, [255, 240, 184, 0.8]);
+circle(700, 300, 12, [255, 255, 255, 0.7]);
+circle(70, 310, 10, [255, 240, 184, 0.8]);
+heart(648, 128, 28, [244, 170, 190, 0.8]);
+heart(108, 168, 18, [244, 170, 190, 0.7]);
 
 // Ground shadow.
-ellipse(384, 648, 215, 30, SHADOW);
+ellipse(384, 668, 230, 28, SHADOW);
 
-// Tail: curled around the cat's right side, clearly sticking out, tip up.
-bezier(500, 600, 620, 655, 668, 600, 44, FUR);
-bezier(668, 600, 692, 560, 656, 520, 36, FUR);
-circle(652, 510, 18, FUR);
-circle(652, 510, 18, FUR_LIGHT, 0.3);
-line(616, 636, 652, 654, 9, FUR_DARK, 0.55);
-line(668, 578, 690, 556, 9, FUR_DARK, 0.55);
+// Butterfly, top right — the thing the kitten reaches for.
+ellipse(545, 232, 22, 32, BFLY);
+ellipse(587, 232, 22, 32, BFLY);
+circle(545, 222, 6, [255, 255, 255, 0.9]);
+circle(587, 222, 6, [255, 255, 255, 0.9]);
+circle(548, 246, 4, [255, 255, 255, 0.8]);
+circle(584, 246, 4, [255, 255, 255, 0.8]);
+line(566, 220, 566, 252, 5, [90, 70, 60, 1]);
+line(566, 220, 552, 202, 3, [90, 70, 60, 1]);
+line(566, 220, 580, 202, 3, [90, 70, 60, 1]);
 
-// Body: sitting, round and soft.
-ellipse(384, 545, 148, 128, FUR);
-ellipse(384, 565, 92, 92, FUR_LIGHT);
-// Side stripes on the body.
-line(252, 512, 288, 534, 10, FUR_DARK, 0.5);
-line(516, 512, 480, 534, 10, FUR_DARK, 0.5);
+// Tail curled around the loaf's left side, tip up.
+bezier(205, 630, 115, 645, 92, 565, 40, FURT);
+circle(90, 552, 20, FURT);
+line(120, 620, 148, 640, 9, FURTD, 0.55);
+line(100, 575, 122, 595, 9, FURTD, 0.55);
 
-// Back paws at the sides, front paws together in front.
-ellipse(272, 640, 58, 28, FUR);
-ellipse(496, 640, 58, 28, FUR);
-line(262, 632, 262, 652, 4, FUR_DARK, 0.5);
-line(282, 632, 282, 652, 4, FUR_DARK, 0.5);
-line(486, 632, 486, 652, 4, FUR_DARK, 0.5);
-line(506, 632, 506, 652, 4, FUR_DARK, 0.5);
-ellipse(352, 612, 33, 52, FUR_LIGHT);
-ellipse(416, 612, 33, 52, FUR_LIGHT);
-line(344, 640, 344, 658, 4, FUR_DARK, 0.5);
-line(360, 640, 360, 658, 4, FUR_DARK, 0.5);
-line(408, 640, 408, 658, 4, FUR_DARK, 0.5);
-line(424, 640, 424, 658, 4, FUR_DARK, 0.5);
-line(384, 578, 384, 656, 4, FUR_DARK, 0.35);
-// Chest fluff.
-ellipse(384, 472, 60, 46, FUR_LIGHT);
+// Loaf body: wide, round, soft.
+ellipse(384, 585, 195, 115, FURT);
+ellipse(384, 600, 130, 80, FURTL);
+// Tabby stripes across the top of the loaf.
+line(300, 490, 330, 512, 10, FURTD, 0.5);
+line(384, 478, 384, 506, 10, FURTD, 0.5);
+line(468, 490, 438, 512, 10, FURTD, 0.5);
+
+// Back paws at the sides.
+ellipse(212, 668, 46, 22, FURT);
+ellipse(556, 668, 46, 22, FURT);
+line(202, 660, 202, 676, 4, FURTD, 0.5);
+line(222, 660, 222, 676, 4, FURTD, 0.5);
+line(546, 660, 546, 676, 4, FURTD, 0.5);
+line(566, 660, 566, 676, 4, FURTD, 0.5);
+
+// Left front paw on the ground, protruding below the body edge.
+ellipse(292, 670, 36, 24, FURTL);
+line(284, 662, 284, 678, 4, FURTD, 0.5);
+line(292, 660, 292, 678, 4, FURTD, 0.5);
+line(300, 662, 300, 678, 4, FURTD, 0.5);
+
+// Right arm raised toward the butterfly, paw at the top.
+line(498, 560, 522, 492, 46, FURT);
+ellipse(526, 472, 32, 40, FURT);
+line(516, 438, 516, 456, 4, FURTD, 0.5);
+line(526, 434, 526, 454, 4, FURTD, 0.5);
+line(536, 438, 536, 456, 4, FURTD, 0.5);
 
 // -------------------------------------------------------------------- head
 // Ears first so the head circle covers their bases.
-hTriangle(-150, -95, -108, -198, -58, -112, FUR);
-hTriangle(150, -95, 108, -198, 58, -112, FUR);
+hTriangle(-150, -95, -108, -198, -58, -112, FURT);
+hTriangle(150, -95, 108, -198, 58, -112, FURT);
 hTriangle(-128, -108, -106, -172, -76, -116, PINK);
 hTriangle(128, -108, 106, -172, 76, -116, PINK);
 // Big round head.
-hCircle(0, 0, 158, FUR);
+hCircle(0, 0, 140, FURT);
 // Forehead stripes.
-hLine(-40, -128, -28, -92, 10, FUR_DARK, 0.55);
-hLine(0, -134, 0, -94, 10, FUR_DARK, 0.55);
-hLine(40, -128, 28, -92, 10, FUR_DARK, 0.55);
+hLine(-36, -112, -25, -80, 10, FURTD, 0.55);
+hLine(0, -118, 0, -82, 10, FURTD, 0.55);
+hLine(36, -112, 25, -80, 10, FURTD, 0.55);
 // Muzzle.
-hEllipse(0, 62, 92, 62, FUR_LIGHT);
+hEllipse(0, 58, 84, 56, FURTL);
 // Blush cheeks.
-hEllipse(-108, 48, 26, 15, BLUSH);
-hEllipse(108, 48, 26, 15, BLUSH);
+hEllipse(-98, 44, 24, 14, BLUSH);
+hEllipse(98, 44, 24, 14, BLUSH);
 
-// Eyes: big, bright, with large highlights.
+// Eyes looking UP at the butterfly: pupils shifted up.
 for (const side of [-1, 1]) {
-  const ex = side * 62;
-  const ey = -25;
-  hEllipse(ex, ey, 36, 44, WHITE);
-  hCircle(ex, ey + 4, 27, IRIS);
-  hCircle(ex, ey + 4, 15, PUPIL);
-  hCircle(ex - 9, ey - 8, 8, WHITE);
-  hCircle(ex + 10, ey + 12, 3.5, WHITE);
+  const ex = side * 58;
+  const ey = -22;
+  hEllipse(ex, ey, 34, 42, WHITE);
+  hCircle(ex, ey - 4, 26, IRIS_B);
+  hCircle(ex, ey - 6, 14, PUPIL);
+  hCircle(ex - 8, ey - 16, 8, WHITE);
+  hCircle(ex + 9, ey + 8, 3.5, WHITE);
 }
 
-// Nose, philtrum and smiling mouth.
-hTriangle(-16, 20, 16, 20, 0, 44, NOSE);
-hCircle(0, 30, 9, NOSE);
-hLine(0, 44, 0, 56, 4.5, LINE);
-hBezier(0, 56, -14, 66, -30, 48, 4.5, LINE);
-hBezier(0, 56, 14, 66, 30, 48, 4.5, LINE);
+// Nose, philtrum and a little open smile of wonder.
+hTriangle(-15, 18, 15, 18, 0, 40, NOSE);
+hCircle(0, 28, 8, NOSE);
+hLine(0, 40, 0, 50, 4.5, LINE);
+hBezier(0, 50, -13, 62, -28, 44, 4.5, LINE);
+hBezier(0, 50, 13, 62, 28, 44, 4.5, LINE);
+hEllipse(0, 62, 10, 7, [232, 120, 120, 1]);
 
 // Whiskers: three per side.
 for (const side of [-1, 1]) {
-  hLine(side * 70, 45, side * 152, 28, 3, WHISKER);
-  hLine(side * 72, 58, side * 156, 58, 3, WHISKER);
-  hLine(side * 70, 72, side * 150, 90, 3, WHISKER);
+  hLine(side * 64, 42, side * 140, 26, 3, WHISKER);
+  hLine(side * 66, 54, side * 144, 54, 3, WHISKER);
+  hLine(side * 64, 66, side * 138, 84, 3, WHISKER);
 }
-
-// ------------------------------------------------- toy: ball of yarn, left
-circle(150, 652, 32, YARN);
-bezier(124, 636, 150, 652, 176, 668, 5, YARN_DARK);
-bezier(126, 668, 150, 646, 174, 634, 5, YARN_DARK);
-bezier(150, 622, 138, 652, 150, 682, 5, YARN_DARK);
-bezier(176, 640, 200, 668, 236, 662, 5, YARN_DARK);
-bezier(236, 662, 258, 656, 272, 646, 5, YARN_DARK);
 
 // ------------------------------------------------------------- PNG encode
 const CRC_TABLE = new Int32Array(256);
